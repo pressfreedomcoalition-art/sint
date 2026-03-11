@@ -1,0 +1,181 @@
+<?php
+include("config.php");
+include("auth.php");
+if($_SESSION["ipso_user"]["role"]!="admin")
+{
+     header('location: ipso.php');
+}
+if(!empty($_GET["action"]) && !empty($_GET["id"]))
+{
+    if($_GET["action"]=="delete")
+    {
+$statement = $pdo->prepare("DELETE FROM ipso WHERE id=?");
+$statement->execute(array($_GET["id"]));
+    }
+    header('location: ipso_users_list.php');
+}
+$statement = $pdo->prepare("SELECT * FROM ipso");  
+$statement->execute();
+$users_ipso=$statement->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Users List</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
+        <script data-search-pseudo-elements defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.28.0/feather.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="nav-fixed">
+        <nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white" id="sidenavAccordion">
+            <!-- Sidenav Toggle Button-->
+            <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 me-2 ms-lg-2 me-lg-0" id="sidebarToggle"><i data-feather="menu"></i></button>
+            <!-- Navbar Brand-->
+            <!-- * * Tip * * You can use text or an image for your navbar brand.-->
+            <!-- * * * * * * When using an image, we recommend the SVG format.-->
+            <!-- * * * * * * Dimensions: Maximum height: 32px, maximum width: 240px-->
+            <a class="navbar-brand pe-3 ps-4 ps-lg-2" href="">Users</a>
+          
+            <!-- Navbar Items-->
+            <ul class="navbar-nav align-items-center ms-auto">
+         
+           
+              
+          
+                <!-- User Dropdown-->
+                <li class="nav-item dropdown no-caret dropdown-user me-3 me-lg-4">
+                    <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownUserImage" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                    <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up" aria-labelledby="navbarDropdownUserImage">
+                        <h6 class="dropdown-header d-flex align-items-center">
+                         
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-details-name"><?=$_SESSION["ipso_user"]["login"];?></div>
+                              
+                            </div>
+                        </h6>
+                        <div class="dropdown-divider"></div>
+                     
+                        <a class="dropdown-item" href="#!">
+                            <div class="dropdown-item-icon"><i data-feather="log-out"></i></div>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+             <div id="layoutSidenav_nav">
+                <nav class="sidenav shadow-right sidenav-light">
+                    <div class="sidenav-menu">
+                        <div class="nav accordion" id="accordionSidenav">
+                          
+                            <a class="nav-link" href="ipso.php">
+                               
+                          На главную
+                            </a>
+                        
+            
+                        </div>
+                    </div>
+                  
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+                        <div class="container-fluid px-4">
+                            <div class="page-header-content">
+                                <div class="row align-items-center justify-content-between pt-3">
+                                    <div class="col-auto mb-3">
+                                        <h1 class="page-header-title">
+                                            <div class="page-header-icon"><i data-feather="user"></i></div>
+                                            Users List
+                                        </h1>
+                                    </div>
+                                    <div class="col-12 col-xl-auto mb-3">
+                                      
+                                        <a class="btn btn-sm btn-light text-primary" href="ipso_users.php">
+                                            <i class="me-1" data-feather="user-plus"></i>
+                                            Add New User
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- Main page content-->
+                    <div class="container-fluid px-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Role</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>User</th>
+                                         
+                                            <th>Role</th>
+                                           
+                                            <th>Actions</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                   
+                              <?php
+                              foreach($users_ipso as $u)
+                              {
+                                  
+                              
+                              ?>
+                                       
+                               <tr>
+                                            <td>
+                                              <?=$u["login"];?>   
+                                            </td>
+                                            <td> <?=$u["role"];?> </td>
+                                         
+                                            <td>
+                                       
+                                                <a class="btn btn-datatable btn-transparent-dark" href="<?=BASE_URL; ?>/ipso_users_list.php?action=delete&id=<?php echo $u["id"]; ?>">Удалить</a>
+                                            </td>
+                                </tr>
+                                     
+                                  
+                             <?php } ?>      
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="footer-admin mt-auto footer-light">
+                    <div class="container-xl px-4">
+                        <div class="row">
+                            <div class="col-md-6 small">Copyright &copy; 2026</div>
+                            <div class="col-md-6 text-md-end small">
+                             
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+        <script src="js/datatables/datatables-simple-demo.js"></script>
+    </body>
+</html>
