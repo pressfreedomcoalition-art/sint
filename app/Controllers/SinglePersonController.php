@@ -19,7 +19,8 @@ final class SinglePersonController
     public function handle(): void
     {
         if (empty($_GET['hash'])) {
-            header('location: ipso.php');
+            $target = (($_SESSION['ipso_user']['role'] ?? '') === 'ipsoshnik') ? 'criminals_pool.php' : 'ipso.php';
+            header('location: ' . $target);
             exit;
         }
 
@@ -31,7 +32,8 @@ final class SinglePersonController
         );
 
         if ($detail === null) {
-            header('location: ipso.php');
+            $target = (($_SESSION['ipso_user']['role'] ?? '') === 'ipsoshnik') ? 'criminals_pool.php' : 'ipso.php';
+            header('location: ' . $target);
             exit;
         }
 

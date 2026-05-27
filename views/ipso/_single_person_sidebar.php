@@ -2,6 +2,8 @@
 /** @var array<string, mixed> $person */
 /** @var array<string, mixed> $sessionUser */
 /** @var string $hash */
+/** @var array<int, array<string, mixed>> $organizationCatalog */
+/** @var array<int, int> $selectedOrganizationIds */
 ?>
 <div id="layoutSidenav_nav">
     <nav class="sidenav shadow-right sidenav-light">
@@ -31,18 +33,27 @@
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-12">
                                         <label class="small mb-1" for="organizations">Принадлежность к организациям</label>
-                                        <textarea class="form-control" id="organizations" name="organizatons" rows="4" placeholder="фсб,мвд,гру"><?php
-                                        if (!empty($person['organizations'])) {
-                                            echo htmlspecialchars($person['organizations'], ENT_QUOTES, 'UTF-8');
-                                        }
-                                        ?></textarea>
+                                        <?php foreach ($organizationCatalog as $org) {
+                                            $orgId = (int) $org['id'];
+                                            $checked = in_array($orgId, $selectedOrganizationIds, true) ? 'checked' : '';
+                                            ?>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="org_<?= $orgId ?>" name="org_ids[]" value="<?= $orgId ?>" <?= $checked ?> />
+                                                <label class="form-check-label" for="org_<?= $orgId ?>">
+                                                    <?= htmlspecialchars((string) $org['name'], ENT_QUOTES, 'UTF-8') ?>
+                                                </label>
+                                            </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
                                 <button class="btn btn-primary" name="upd" type="submit">Обновить</button>
                             </form>
                         </div>
                     </div>
-                    <?php if ($person['user_id'] === null) { ?>
+                    <?php
+                    $assignedId = (int) ($person['assigned_ipso_user_id'] ?? ($person['user_id'] ?? 0));
+                    $isCriminal = (int) ($person['is_criminal'] ?? 0) === 1;
+                    if ($isCriminal && $assignedId === 0) { ?>
                     <div class="card mb-12">
                         <div class="card-header">Взять в работу</div>
                         <div class="card-body">
@@ -52,7 +63,7 @@
                             </form>
                         </div>
                     </div>
-                    <?php } elseif ((int) $sessionUser['id'] === (int) $person['user_id']) { ?>
+                    <?php } elseif ($isCriminal && (int) $sessionUser['id'] === $assignedId) { ?>
                     <div class="card mb-12">
                         <div class="card-header">Отказаться</div>
                         <div class="card-body">

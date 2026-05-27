@@ -3,6 +3,7 @@
 /** @var string $content */
 /** @var string $footerScriptsHtml */
 /** @var bool $isAdmin */
+/** @var bool $isIpso */
 $bodyClass = 'nav-fixed';
 $pageHeaderIcon = $pageHeaderIcon ?? 'user-plus';
 ?>
@@ -20,13 +21,18 @@ $pageHeaderIcon = $pageHeaderIcon ?? 'user-plus';
     </head>
     <body class="nav-fixed">
         <div id="layoutSidenav">
-            <?php if (!empty($isAdmin)) { ?>
+            <?php if (!empty($isAdmin) || !empty($isIpso)) { ?>
             <div id="layoutSidenav_nav">
                 <nav class="sidenav shadow-right sidenav-light">
                     <div class="sidenav-menu">
                         <div class="nav accordion" id="accordionSidenav">
-                            <a class="nav-link" href="ipso_users_list.php">Юзеры</a>
-                            <a class="nav-link" href="access_keys.php">Ключи доступа</a>
+                            <?php if (!empty($isAdmin)) { ?>
+                                <a class="nav-link" href="ipso_users_list.php">Юзеры</a>
+                                <a class="nav-link" href="access_keys.php">Ключи доступа</a>
+                                <a class="nav-link" href="criminal_organizations.php">Организации</a>
+                            <?php } ?>
+                            <a class="nav-link" href="criminals_pool.php">Нераспределенные</a>
+                            <a class="nav-link" href="my_clients.php">Мои клиенты</a>
                         </div>
                     </div>
                 </nav>

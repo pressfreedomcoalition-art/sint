@@ -21,6 +21,7 @@
                                 <option selected disabled>Select a role:</option>
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
+                                <option value="ipsoshnik">Ipsoshnik</option>
                             </select>
                         </div>
                         <button class="btn btn-primary" type="submit">Add user</button>

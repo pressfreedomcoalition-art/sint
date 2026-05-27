@@ -67,6 +67,15 @@ if (is_array($results) && !isset($results['nothing_found'])) {
                                 <input class="form-control" name="comments" type="text" />
                             </div>
                         </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="mark_criminal">Отметка</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="mark_criminal" name="mark_criminal" type="checkbox" value="1" checked />
+                                    <label class="form-check-label" for="mark_criminal">преступник</label>
+                                </div>
+                            </div>
+                        </div>
                         <input name="hash" type="hidden" value="<?= htmlspecialchars($fioDobForm['hash'], ENT_QUOTES, 'UTF-8') ?>" />
                         <button class="btn btn-primary" type="submit">Создать/изменить личное дело</button>
                         <?php if ($msgAboutUpdate !== null) {

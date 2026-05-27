@@ -13,6 +13,7 @@ PHP-приложение OSINT-поиска + панель **IPso** (личны�
 | Поиск | `?token=` → `users` | `search.php`, `search_request.php`, `search_results.php` |
 | IPso | сессия `ipso_user` | `login.php`, `ipso.php`, `single_person.php`, `ipso_users*.php` |
 | Админ ключей | сессия `ipso_user` (role=admin) | `access_keys.php` |
+| Админ организаций | сессия `ipso_user` (role=admin) | `criminal_organizations.php` |
 
 **`config.php`** (вне git): `$pdo`, `$esia_tables`, `BASE_URL`.
 
@@ -23,6 +24,7 @@ PHP-приложение OSINT-поиска + панель **IPso** (личны�
 ```
 sint/
   dispatch.php              ← единая точка входа (роутер)
+  db_migr.php               ← массив миграций БД по индексам
   bootstrap.php             ← config, search_functions, Autoloader
   auth.php                  ← legacy-обёртка AuthGate (если нужен отдельный include)
   app/
@@ -55,6 +57,7 @@ require __DIR__ . '/dispatch.php';
 ```
 
 `dispatch.php` → `Router::dispatch($route)` по имени скрипта.
+Перед роутингом запускаются миграции из `db_migr.php` через `DbMigrator`.
 
 `index.php` → маршрут `search`.
 
@@ -91,6 +94,7 @@ require __DIR__ . '/dispatch.php';
 
 - без `token` → IPso (логин / сессия / `die`)
 - с `token` → пользователь `users`
+- если `users.access_status = blocked` → `ACCESS BLOCKED`
 
 Для `login.php` роутер выставляет `$_GET['page'] = 'login'`.
 
@@ -107,6 +111,9 @@ require __DIR__ . '/dispatch.php';
 5. Новый код в `app/` — `declare(strict_types=1);`, без `global $pdo`.
 6. Новые страницы: Controller + View + запись в `Router::ROUTES`.
 7. Для токенов `users.access_status` используются только значения: `admin`, `user`, `blocked`.
+8. Роли IPso: `admin`, `user`, `ipsoshnik`.
+9. Для `ipsoshnik` показываются только списки преступников (общий пул + мои клиенты).
+10. Преступные организации хранятся в `criminal_organizations`, связи с делами — `person_criminal_organizations`.
 
 ---
 
@@ -142,6 +149,8 @@ require __DIR__ . '/dispatch.php';
 - [ ] Список и деталь `search_results.php`
 - [ ] `login.php` / `ipso.php` / `single_person.php`
 - [ ] `ipso_users.php`, `ipso_users_list.php`
+- [ ] `criminals_pool.php`, `my_clients.php` (роль `ipsoshnik`)
+- [ ] Клиент со статусом `is_criminal=1`: взять/вернуть, недоступен другим ипсошникам после назначения
 - [ ] `add_manual.php`, `getperson.php?hash=`
 - [ ] JSON API `getperson` совпадает с эталоном
 
@@ -155,3 +164,5 @@ require __DIR__ . '/dispatch.php';
 | 2026-05-27 | Убран Composer |
 | 2026-05-27 | Этапы 3–6: repositories, controllers, views, Router, SearchSourceRegistry, SqlLikeHelper |
 | 2026-05-27 | Добавлена админка `access_keys.php` для создания ключей и управления статусом (`admin`/`user`/`blocked`) |
+| 2026-05-27 | Добавлены `db_migr.php` + `DbMigrator`, роль `ipsoshnik`, списки `criminals_pool.php` и `my_clients.php`, отметка `is_criminal` и распределение по ипсошнику |
+| 2026-05-27 | Добавлен справочник преступных организаций, админ-редактор и экспорт организаций в `getperson` JSON |

@@ -8,8 +8,11 @@ use App\Controllers\AddManualController;
 use App\Controllers\AccessKeysController;
 use App\Controllers\GetPersonController;
 use App\Controllers\IpsoController;
+use App\Controllers\CriminalPoolController;
+use App\Controllers\CriminalOrganizationsController;
 use App\Controllers\IpsoUsersController;
 use App\Controllers\LoginController;
+use App\Controllers\MyClientsController;
 use App\Controllers\SearchController;
 use App\Controllers\SearchResultsController;
 use App\Controllers\SinglePersonController;
@@ -17,6 +20,7 @@ use App\Infrastructure\LegacySearchAdapter;
 use App\Repositories\IpsoCommentRepository;
 use App\Repositories\IpsoUserRepository;
 use App\Repositories\AccessKeyRepository;
+use App\Repositories\CriminalOrganizationRepository;
 use App\Repositories\ManualInsertRepository;
 use App\Repositories\PersonRepository;
 use App\Repositories\SearchRequestRepository;
@@ -105,6 +109,11 @@ final class Application
         return new AccessKeyRepository($this->pdo);
     }
 
+    public function criminalOrganizations(): CriminalOrganizationRepository
+    {
+        return new CriminalOrganizationRepository($this->pdo);
+    }
+
     public function searchResultsService(): SearchResultsService
     {
         return new SearchResultsService(
@@ -117,13 +126,17 @@ final class Application
     {
         return new PersonService(
             new PersonRepository($this->pdo),
-            new IpsoCommentRepository($this->pdo)
+            new IpsoCommentRepository($this->pdo),
+            new CriminalOrganizationRepository($this->pdo)
         );
     }
 
     public function personExportService(): PersonExportService
     {
-        return new PersonExportService(new PersonRepository($this->pdo));
+        return new PersonExportService(
+            new PersonRepository($this->pdo),
+            new CriminalOrganizationRepository($this->pdo)
+        );
     }
 
     public function manualInsertService(): ManualInsertService
@@ -171,6 +184,11 @@ final class Application
         return new AccessKeysController($this);
     }
 
+    public function criminalOrganizationsController(): CriminalOrganizationsController
+    {
+        return new CriminalOrganizationsController($this);
+    }
+
     public function addManualController(): AddManualController
     {
         return new AddManualController($this);
@@ -179,5 +197,15 @@ final class Application
     public function getPersonController(): GetPersonController
     {
         return new GetPersonController($this);
+    }
+
+    public function criminalPoolController(): CriminalPoolController
+    {
+        return new CriminalPoolController($this);
+    }
+
+    public function myClientsController(): MyClientsController
+    {
+        return new MyClientsController($this);
     }
 }

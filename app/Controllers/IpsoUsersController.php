@@ -29,7 +29,10 @@ final class IpsoUsersController
         $this->requireAdmin();
 
         if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['role'])) {
-            $this->app->ipsoUsers()->create($_POST['login'], $_POST['password'], $_POST['role']);
+            $role = (string) $_POST['role'];
+            if (in_array($role, ['admin', 'user', 'ipsoshnik'], true)) {
+                $this->app->ipsoUsers()->create($_POST['login'], $_POST['password'], $role);
+            }
         }
 
         View::renderLayout('ipso_admin', 'ipso/users_add', [

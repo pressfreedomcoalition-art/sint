@@ -5,14 +5,20 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Repositories\PersonRepository;
+use App\Repositories\CriminalOrganizationRepository;
 
 final class PersonExportService
 {
     private PersonRepository $persons;
+    private CriminalOrganizationRepository $organizations;
 
-    public function __construct(PersonRepository $persons)
+    public function __construct(
+        PersonRepository $persons,
+        CriminalOrganizationRepository $organizations
+    )
     {
         $this->persons = $persons;
+        $this->organizations = $organizations;
     }
 
     /**
@@ -44,7 +50,7 @@ final class PersonExportService
             ],
             'status' => null,
             'special_marks' => null,
-            'criminal_organizations' => [],
+            'criminal_organizations' => $this->organizations->findNamesByPersonId((int) $f['id']),
         ];
 
         $results = json_decode($f['data'], true);

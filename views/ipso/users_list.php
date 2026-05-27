@@ -4,6 +4,7 @@
 <div class="container-fluid px-4">
     <div class="mb-3">
         <a class="btn btn-sm btn-light text-primary" href="access_keys.php">Управлять ключами доступа</a>
+        <a class="btn btn-sm btn-light text-primary" href="criminal_organizations.php">Управлять преступными организациями</a>
     </div>
     <div class="card">
         <div class="card-body">

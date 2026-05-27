@@ -71,14 +71,14 @@ final class PersonRepository
 
     public function assignUser(int $userId, string $hash): void
     {
-        $statement = $this->pdo->prepare('UPDATE faggots SET user_id=? WHERE hash=?');
-        $statement->execute([$userId, $hash]);
+        $statement = $this->pdo->prepare('UPDATE faggots SET user_id=?, assigned_ipso_user_id=? WHERE hash=? AND is_criminal=1');
+        $statement->execute([$userId, $userId, $hash]);
     }
 
     public function unassign(string $hash): void
     {
-        $statement = $this->pdo->prepare('UPDATE faggots SET user_id=? WHERE hash=?');
-        $statement->execute([null, $hash]);
+        $statement = $this->pdo->prepare('UPDATE faggots SET user_id=?, assigned_ipso_user_id=? WHERE hash=? AND is_criminal=1');
+        $statement->execute([null, null, $hash]);
     }
 
     public function updateTags(string $tags, string $hash): void
@@ -91,5 +91,67 @@ final class PersonRepository
     {
         $statement = $this->pdo->prepare('UPDATE faggots SET organizations=? WHERE hash=?');
         $statement->execute([$organizations, $hash]);
+    }
+
+    public function markCriminal(string $hash, bool $isCriminal): void
+    {
+        $statement = $this->pdo->prepare('UPDATE faggots SET is_criminal=? WHERE hash=?');
+        $statement->execute([$isCriminal ? 1 : 0, $hash]);
+    }
+
+    public function countCriminalUnassigned(): int
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT COUNT(*) FROM faggots WHERE is_criminal=1 AND assigned_ipso_user_id IS NULL'
+        );
+        $statement->execute();
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return (int) $row['COUNT(*)'];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findCriminalUnassignedByIdRange(int $fromId, int $toId): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT * FROM faggots
+             WHERE is_criminal=1
+               AND assigned_ipso_user_id IS NULL
+               AND id BETWEEN ? AND ?
+             ORDER BY id DESC'
+        );
+        $statement->execute([$fromId, $toId]);
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countCriminalByAssignee(int $ipsoUserId): int
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT COUNT(*) FROM faggots WHERE is_criminal=1 AND assigned_ipso_user_id=?'
+        );
+        $statement->execute([$ipsoUserId]);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return (int) $row['COUNT(*)'];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findCriminalByAssigneeIdRange(int $ipsoUserId, int $fromId, int $toId): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT * FROM faggots
+             WHERE is_criminal=1
+               AND assigned_ipso_user_id=?
+               AND id BETWEEN ? AND ?
+             ORDER BY id DESC'
+        );
+        $statement->execute([$ipsoUserId, $fromId, $toId]);
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

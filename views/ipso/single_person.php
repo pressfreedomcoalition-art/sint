@@ -2,6 +2,8 @@
 /** @var array<string, mixed>|null $data */
 /** @var array<string, mixed> $person */
 /** @var array<int, array<string, mixed>>|null $comments */
+/** @var array<int, array<string, mixed>> $organizationCatalog */
+/** @var array<int, int> $selectedOrganizationIds */
 ?>
 <div class="container-xl px-4 mt-4">
     <div class="row">
@@ -63,8 +65,16 @@ if (is_array($data) && !isset($data['nothing_found'])) {
                         <div class="col-md-6">
                             <br />
                             <?php
-                            if (!empty($person['organizations'])) {
-                                echo $person['organizations'];
+                            $names = [];
+                            foreach ($organizationCatalog as $org) {
+                                if (in_array((int) $org['id'], $selectedOrganizationIds, true)) {
+                                    $names[] = (string) $org['name'];
+                                }
+                            }
+                            if (!empty($names)) {
+                                echo implode('<br />', $names);
+                            } elseif (!empty($person['organizations'])) {
+                                echo $person['organizations']; // legacy fallback
                             } else {
                                 echo 'организации ещё не добавлены';
                             }

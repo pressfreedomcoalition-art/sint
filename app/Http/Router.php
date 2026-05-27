@@ -16,10 +16,13 @@ final class Router
         'search_results' => ['searchResultsController', 'handle', 'token'],
         'login' => ['loginController', 'handle', 'ipso'],
         'ipso' => ['ipsoController', 'handle', 'ipso'],
+        'criminals_pool' => ['criminalPoolController', 'handle', 'ipso'],
+        'my_clients' => ['myClientsController', 'handle', 'ipso'],
         'single_person' => ['singlePersonController', 'handle', 'ipso'],
         'ipso_users' => ['ipsoUsersController', 'add', 'ipso'],
         'ipso_users_list' => ['ipsoUsersController', 'list', 'ipso'],
         'access_keys' => ['accessKeysController', 'handle', 'ipso'],
+        'criminal_organizations' => ['criminalOrganizationsController', 'handle', 'ipso'],
         'add_manual' => ['addManualController', 'handle', 'none'],
         'getperson' => ['getPersonController', 'handle', 'none'],
     ];

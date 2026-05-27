@@ -67,6 +67,9 @@ final class SearchResultsService
                     $post['hash']
                 );
             }
+            if (!empty($post['mark_criminal'])) {
+                $this->persons->markCriminal($post['hash'], true);
+            }
             $msgAboutUpdate = 'Личное дело обновлено';
         }
 

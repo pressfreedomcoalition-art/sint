@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Application;
 use App\View\View;
 
-final class IpsoController
+final class CriminalPoolController
 {
     private Application $app;
 
@@ -19,24 +19,24 @@ final class IpsoController
     public function handle(): void
     {
         $role = (string) ($_SESSION['ipso_user']['role'] ?? '');
-        if ($role === 'ipsoshnik') {
-            header('location: criminals_pool.php');
+        if (!in_array($role, ['admin', 'ipsoshnik'], true)) {
+            header('location: ipso.php');
             exit;
         }
 
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        $list = $this->app->personService()->listPaginated($page);
-        $isAdmin = $role === 'admin';
+        $list = $this->app->personService()->listCriminalUnassigned($page);
 
         View::renderLayout('ipso', 'ipso/list', [
-            'title' => 'Results',
-            'pageHeaderTitle' => 'Данные',
+            'title' => 'Criminal Pool',
+            'pageHeaderTitle' => 'Нераспределенные преступники',
             'persons' => $list['persons'],
             'pagination' => $list['pagination'],
-            'isAdmin' => $isAdmin,
-            'isIpso' => false,
-            'pageBaseUrl' => 'ipso.php?',
-            'listMode' => 'all',
+            'isAdmin' => $role === 'admin',
+            'isIpso' => $role === 'ipsoshnik',
+            'pageBaseUrl' => 'criminals_pool.php?',
+            'listMode' => 'pool',
         ]);
     }
 }
+
