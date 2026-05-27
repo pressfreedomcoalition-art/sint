@@ -112,9 +112,10 @@ require __DIR__ . '/dispatch.php';
 5. Новый код в `app/` — `declare(strict_types=1);`, без `global $pdo`.
 6. Новые страницы: Controller + View + запись в `Router::ROUTES`.
 7. Для токенов `users.access_status` используются только значения: `admin`, `user`, `blocked`.
-8. Роли IPso: `admin`, `user`, `ipsoshnik`.
+8. Роли IPso: `admin`, `ipso_admin`, `user`, `ipsoshnik`.
 9. Для `ipsoshnik` показываются только списки преступников (общий пул + мои клиенты).
-10. Преступные организации хранятся в `criminal_organizations`, связи с делами — `person_criminal_organizations`.
+10. `admin` может создавать `ipso_admin`; `ipso_admin` может создавать только `ipsoshnik`.
+11. Преступные организации хранятся в `criminal_organizations`, связи с делами — `person_criminal_organizations`.
 
 ---
 
@@ -169,3 +170,4 @@ require __DIR__ . '/dispatch.php';
 | 2026-05-27 | Добавлен справочник преступных организаций, админ-редактор и экспорт организаций в `getperson` JSON |
 | 2026-05-27 | Добавлен поиск и фильтр по организации в списках преступников (`criminals_pool.php`, `my_clients.php`) |
 | 2026-05-27 | Закрыты незащищенные маршруты: `add_manual` теперь только IPso admin, `getperson` теперь только по token |
+| 2026-05-27 | Добавлена роль `ipso_admin`: создается обычным `admin`, может создавать аккаунты `ipsoshnik` |

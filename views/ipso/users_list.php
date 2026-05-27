@@ -1,5 +1,6 @@
 <?php
 /** @var array<int, array<string, mixed>> $users */
+/** @var bool $canDeleteUsers */
 ?>
 <div class="container-fluid px-4">
     <div class="mb-3">
@@ -22,7 +23,11 @@
                         <td><?= $u['login'] ?></td>
                         <td><?= $u['role'] ?></td>
                         <td>
-                            <a class="btn btn-datatable btn-transparent-dark" href="<?= BASE_URL ?>/ipso_users_list.php?action=delete&id=<?= (int) $u['id'] ?>">Удалить</a>
+                            <?php if (!empty($canDeleteUsers)) { ?>
+                                <a class="btn btn-datatable btn-transparent-dark" href="<?= BASE_URL ?>/ipso_users_list.php?action=delete&id=<?= (int) $u['id'] ?>">Удалить</a>
+                            <?php } else { ?>
+                                <span class="text-muted">Нет прав</span>
+                            <?php } ?>
                         </td>
                     </tr>
                     <?php } ?>

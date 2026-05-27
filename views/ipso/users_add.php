@@ -1,3 +1,4 @@
+<?php /** @var array<int, string> $allowedRolesToCreate */ ?>
 <div class="container-xl px-4 mt-4">
     <div class="row">
         <div class="col-xl-8">
@@ -19,9 +20,11 @@
                             <label class="small mb-1">Role</label>
                             <select class="form-select" name="role" required>
                                 <option selected disabled>Select a role:</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                                <option value="ipsoshnik">Ipsoshnik</option>
+                                <?php foreach ($allowedRolesToCreate as $roleOption) { ?>
+                                    <option value="<?= htmlspecialchars($roleOption, ENT_QUOTES, 'UTF-8') ?>">
+                                        <?= htmlspecialchars($roleOption, ENT_QUOTES, 'UTF-8') ?>
+                                    </option>
+                                <?php } ?>
                             </select>
                         </div>
                         <button class="btn btn-primary" type="submit">Add user</button>

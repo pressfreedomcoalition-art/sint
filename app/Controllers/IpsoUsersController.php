@@ -16,9 +16,14 @@ final class IpsoUsersController
         $this->app = $app;
     }
 
-    private function requireAdmin(): void
+    private function currentRole(): string
     {
-        if (($_SESSION['ipso_user']['role'] ?? '') !== 'admin') {
+        return (string) ($_SESSION['ipso_user']['role'] ?? '');
+    }
+
+    private function requireAdminOrIpsoAdmin(): void
+    {
+        if (!in_array($this->currentRole(), ['admin', 'ipso_admin'], true)) {
             header('location: ipso.php');
             exit;
         }
@@ -26,26 +31,36 @@ final class IpsoUsersController
 
     public function add(): void
     {
-        $this->requireAdmin();
+        $this->requireAdminOrIpsoAdmin();
+
+        $role = $this->currentRole();
+        $allowedRolesToCreate = ['ipsoshnik'];
+        if ($role === 'admin') {
+            $allowedRolesToCreate = ['admin', 'ipso_admin', 'user', 'ipsoshnik'];
+        }
 
         if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['role'])) {
-            $role = (string) $_POST['role'];
-            if (in_array($role, ['admin', 'user', 'ipsoshnik'], true)) {
-                $this->app->ipsoUsers()->create($_POST['login'], $_POST['password'], $role);
+            $newRole = (string) $_POST['role'];
+            if (in_array($newRole, $allowedRolesToCreate, true)) {
+                $this->app->ipsoUsers()->create($_POST['login'], $_POST['password'], $newRole);
             }
         }
 
         View::renderLayout('ipso_admin', 'ipso/users_add', [
             'title' => 'Add User',
             'pageHeaderTitle' => 'Добавить юзера',
+            'allowedRolesToCreate' => $allowedRolesToCreate,
         ]);
     }
 
     public function list(): void
     {
-        $this->requireAdmin();
+        $this->requireAdminOrIpsoAdmin();
 
-        if (!empty($_GET['action']) && !empty($_GET['id']) && $_GET['action'] === 'delete') {
+        $role = $this->currentRole();
+        $canDeleteUsers = $role === 'admin';
+
+        if ($canDeleteUsers && !empty($_GET['action']) && !empty($_GET['id']) && $_GET['action'] === 'delete') {
             $this->app->ipsoUsers()->deleteById((int) $_GET['id']);
             header('location: ipso_users_list.php');
             exit;
@@ -56,6 +71,7 @@ final class IpsoUsersController
             'pageHeaderTitle' => 'Users List',
             'users' => $this->app->ipsoUsers()->findAll(),
             'includeDatatables' => true,
+            'canDeleteUsers' => $canDeleteUsers,
         ]);
     }
 }
