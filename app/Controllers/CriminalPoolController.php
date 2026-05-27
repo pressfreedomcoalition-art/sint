@@ -25,7 +25,16 @@ final class CriminalPoolController
         }
 
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        $list = $this->app->personService()->listCriminalUnassigned($page);
+        $query = isset($_GET['q']) ? trim((string) $_GET['q']) : null;
+        $orgId = isset($_GET['org_id']) && $_GET['org_id'] !== '' ? (int) $_GET['org_id'] : null;
+        $list = $this->app->personService()->listCriminalUnassignedFiltered($page, $query, $orgId);
+        $queryTail = '';
+        if ($query !== null && $query !== '') {
+            $queryTail .= '&q=' . urlencode($query);
+        }
+        if ($orgId !== null && $orgId > 0) {
+            $queryTail .= '&org_id=' . $orgId;
+        }
 
         View::renderLayout('ipso', 'ipso/list', [
             'title' => 'Criminal Pool',
@@ -34,8 +43,11 @@ final class CriminalPoolController
             'pagination' => $list['pagination'],
             'isAdmin' => $role === 'admin',
             'isIpso' => $role === 'ipsoshnik',
-            'pageBaseUrl' => 'criminals_pool.php?',
+            'pageBaseUrl' => 'criminals_pool.php?' . ltrim($queryTail . '&', '&'),
             'listMode' => 'pool',
+            'searchQuery' => $query ?? '',
+            'selectedOrgId' => $orgId ?? 0,
+            'organizationCatalog' => $this->app->criminalOrganizations()->findAll(),
         ]);
     }
 }

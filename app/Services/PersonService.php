@@ -45,11 +45,19 @@ final class PersonService
      */
     public function listCriminalUnassigned(int $page): array
     {
-        $pagination = new Pagination($this->persons->countCriminalUnassigned(), $page);
+        return $this->listCriminalUnassignedFiltered($page, null, null);
+    }
+
+    /**
+     * @return array{persons: array, pagination: Pagination}
+     */
+    public function listCriminalUnassignedFiltered(int $page, ?string $query, ?int $organizationId): array
+    {
+        $pagination = new Pagination($this->persons->countCriminalUnassignedFiltered($query, $organizationId), $page);
         [$from, $to] = $pagination->idRange();
 
         return [
-            'persons' => $this->persons->findCriminalUnassignedByIdRange($from, $to),
+            'persons' => $this->persons->findCriminalUnassignedByIdRangeFiltered($from, $to, $query, $organizationId),
             'pagination' => $pagination,
         ];
     }
@@ -59,11 +67,19 @@ final class PersonService
      */
     public function listMyClients(int $ipsoUserId, int $page): array
     {
-        $pagination = new Pagination($this->persons->countCriminalByAssignee($ipsoUserId), $page);
+        return $this->listMyClientsFiltered($ipsoUserId, $page, null, null);
+    }
+
+    /**
+     * @return array{persons: array, pagination: Pagination}
+     */
+    public function listMyClientsFiltered(int $ipsoUserId, int $page, ?string $query, ?int $organizationId): array
+    {
+        $pagination = new Pagination($this->persons->countCriminalByAssigneeFiltered($ipsoUserId, $query, $organizationId), $page);
         [$from, $to] = $pagination->idRange();
 
         return [
-            'persons' => $this->persons->findCriminalByAssigneeIdRange($ipsoUserId, $from, $to),
+            'persons' => $this->persons->findCriminalByAssigneeIdRangeFiltered($ipsoUserId, $from, $to, $query, $organizationId),
             'pagination' => $pagination,
         ];
     }

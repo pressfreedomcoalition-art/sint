@@ -25,7 +25,21 @@ final class MyClientsController
         }
 
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        $list = $this->app->personService()->listMyClients((int) $_SESSION['ipso_user']['id'], $page);
+        $query = isset($_GET['q']) ? trim((string) $_GET['q']) : null;
+        $orgId = isset($_GET['org_id']) && $_GET['org_id'] !== '' ? (int) $_GET['org_id'] : null;
+        $list = $this->app->personService()->listMyClientsFiltered(
+            (int) $_SESSION['ipso_user']['id'],
+            $page,
+            $query,
+            $orgId
+        );
+        $queryTail = '';
+        if ($query !== null && $query !== '') {
+            $queryTail .= '&q=' . urlencode($query);
+        }
+        if ($orgId !== null && $orgId > 0) {
+            $queryTail .= '&org_id=' . $orgId;
+        }
 
         View::renderLayout('ipso', 'ipso/list', [
             'title' => 'My Clients',
@@ -34,8 +48,11 @@ final class MyClientsController
             'pagination' => $list['pagination'],
             'isAdmin' => $role === 'admin',
             'isIpso' => $role === 'ipsoshnik',
-            'pageBaseUrl' => 'my_clients.php?',
+            'pageBaseUrl' => 'my_clients.php?' . ltrim($queryTail . '&', '&'),
             'listMode' => 'mine',
+            'searchQuery' => $query ?? '',
+            'selectedOrgId' => $orgId ?? 0,
+            'organizationCatalog' => $this->app->criminalOrganizations()->findAll(),
         ]);
     }
 }

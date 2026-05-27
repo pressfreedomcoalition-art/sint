@@ -166,3 +166,4 @@ require __DIR__ . '/dispatch.php';
 | 2026-05-27 | Добавлена админка `access_keys.php` для создания ключей и управления статусом (`admin`/`user`/`blocked`) |
 | 2026-05-27 | Добавлены `db_migr.php` + `DbMigrator`, роль `ipsoshnik`, списки `criminals_pool.php` и `my_clients.php`, отметка `is_criminal` и распределение по ипсошнику |
 | 2026-05-27 | Добавлен справочник преступных организаций, админ-редактор и экспорт организаций в `getperson` JSON |
+| 2026-05-27 | Добавлен поиск и фильтр по организации в списках преступников (`criminals_pool.php`, `my_clients.php`) |
