@@ -3,6 +3,7 @@
 /** @var string $content */
 /** @var string $footerScriptsHtml */
 /** @var bool $includeDatatables */
+/** @var bool $isRootAdmin */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,8 +26,10 @@
                     <div class="sidenav-menu">
                         <a class="nav-link" href="ipso.php">На главную</a>
                         <a class="nav-link" href="ipso_users_list.php">Юзеры</a>
-                        <a class="nav-link" href="access_keys.php">Ключи доступа</a>
-                        <a class="nav-link" href="criminal_organizations.php">Преступные организации</a>
+                        <?php if (!empty($isRootAdmin)) { ?>
+                            <a class="nav-link" href="access_keys.php">Ключи доступа</a>
+                            <a class="nav-link" href="criminal_organizations.php">Преступные организации</a>
+                        <?php } ?>
                     </div>
                 </nav>
             </div>

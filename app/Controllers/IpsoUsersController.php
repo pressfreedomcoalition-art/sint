@@ -50,6 +50,7 @@ final class IpsoUsersController
             'title' => 'Add User',
             'pageHeaderTitle' => 'Добавить юзера',
             'allowedRolesToCreate' => $allowedRolesToCreate,
+            'isRootAdmin' => $role === 'admin',
         ]);
     }
 
@@ -72,6 +73,7 @@ final class IpsoUsersController
             'users' => $this->app->ipsoUsers()->findAll(),
             'includeDatatables' => true,
             'canDeleteUsers' => $canDeleteUsers,
+            'isRootAdmin' => $role === 'admin',
         ]);
     }
 }

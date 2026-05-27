@@ -116,6 +116,7 @@ require __DIR__ . '/dispatch.php';
 9. Для `ipsoshnik` показываются только списки преступников (общий пул + мои клиенты).
 10. `admin` может создавать `ipso_admin`; `ipso_admin` может создавать только `ipsoshnik`.
 11. Преступные организации хранятся в `criminal_organizations`, связи с делами — `person_criminal_organizations`.
+12. В админ-меню для `ipso_admin` скрыты разделы root-админа (ключи доступа, преступные организации).
 
 ---
 
