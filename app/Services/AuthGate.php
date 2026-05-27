@@ -41,6 +41,10 @@ final class AuthGate
             if ($user === false) {
                 die('PAGE NOT FOUND');
             }
+            $status = (string) ($user['access_status'] ?? 'user');
+            if ($status === 'blocked') {
+                die('ACCESS BLOCKED');
+            }
         }
     }
 }

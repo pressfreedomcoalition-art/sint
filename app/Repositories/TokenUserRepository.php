@@ -21,7 +21,7 @@ final class TokenUserRepository
      */
     public function findByToken(string $token)
     {
-        $statement = $this->pdo->prepare('SELECT * FROM users WHERE token=?');
+        $statement = $this->pdo->prepare('SELECT id, token, access_status FROM users WHERE token=?');
         $statement->execute([$token]);
 
         return $statement->fetch(PDO::FETCH_ASSOC);

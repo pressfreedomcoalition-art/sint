@@ -26,6 +26,7 @@ $pageHeaderIcon = $pageHeaderIcon ?? 'user-plus';
                     <div class="sidenav-menu">
                         <div class="nav accordion" id="accordionSidenav">
                             <a class="nav-link" href="ipso_users_list.php">Юзеры</a>
+                            <a class="nav-link" href="access_keys.php">Ключи доступа</a>
                         </div>
                     </div>
                 </nav>

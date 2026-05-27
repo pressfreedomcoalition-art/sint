@@ -12,6 +12,7 @@ PHP-приложение OSINT-поиска + панель **IPso** (личны�
 |--------|--------|----------|
 | Поиск | `?token=` → `users` | `search.php`, `search_request.php`, `search_results.php` |
 | IPso | сессия `ipso_user` | `login.php`, `ipso.php`, `single_person.php`, `ipso_users*.php` |
+| Админ ключей | сессия `ipso_user` (role=admin) | `access_keys.php` |
 
 **`config.php`** (вне git): `$pdo`, `$esia_tables`, `BASE_URL`.
 
@@ -105,6 +106,7 @@ require __DIR__ . '/dispatch.php';
 4. Известные баги legacy SQL не чинить без отдельного тикета.
 5. Новый код в `app/` — `declare(strict_types=1);`, без `global $pdo`.
 6. Новые страницы: Controller + View + запись в `Router::ROUTES`.
+7. Для токенов `users.access_status` используются только значения: `admin`, `user`, `blocked`.
 
 ---
 
@@ -152,3 +154,4 @@ require __DIR__ . '/dispatch.php';
 | 2026-05-27 | Этапы 1–2 |
 | 2026-05-27 | Убран Composer |
 | 2026-05-27 | Этапы 3–6: repositories, controllers, views, Router, SearchSourceRegistry, SqlLikeHelper |
+| 2026-05-27 | Добавлена админка `access_keys.php` для создания ключей и управления статусом (`admin`/`user`/`blocked`) |

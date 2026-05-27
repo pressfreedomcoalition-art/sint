@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Controllers\AddManualController;
+use App\Controllers\AccessKeysController;
 use App\Controllers\GetPersonController;
 use App\Controllers\IpsoController;
 use App\Controllers\IpsoUsersController;
@@ -15,6 +16,7 @@ use App\Controllers\SinglePersonController;
 use App\Infrastructure\LegacySearchAdapter;
 use App\Repositories\IpsoCommentRepository;
 use App\Repositories\IpsoUserRepository;
+use App\Repositories\AccessKeyRepository;
 use App\Repositories\ManualInsertRepository;
 use App\Repositories\PersonRepository;
 use App\Repositories\SearchRequestRepository;
@@ -98,6 +100,11 @@ final class Application
         return new TokenUserRepository($this->pdo);
     }
 
+    public function accessKeys(): AccessKeyRepository
+    {
+        return new AccessKeyRepository($this->pdo);
+    }
+
     public function searchResultsService(): SearchResultsService
     {
         return new SearchResultsService(
@@ -157,6 +164,11 @@ final class Application
     public function ipsoUsersController(): IpsoUsersController
     {
         return new IpsoUsersController($this);
+    }
+
+    public function accessKeysController(): AccessKeysController
+    {
+        return new AccessKeysController($this);
     }
 
     public function addManualController(): AddManualController

@@ -2,6 +2,9 @@
 /** @var array<int, array<string, mixed>> $users */
 ?>
 <div class="container-fluid px-4">
+    <div class="mb-3">
+        <a class="btn btn-sm btn-light text-primary" href="access_keys.php">Управлять ключами доступа</a>
+    </div>
     <div class="card">
         <div class="card-body">
             <table id="datatablesSimple">

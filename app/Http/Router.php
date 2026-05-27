@@ -19,6 +19,7 @@ final class Router
         'single_person' => ['singlePersonController', 'handle', 'ipso'],
         'ipso_users' => ['ipsoUsersController', 'add', 'ipso'],
         'ipso_users_list' => ['ipsoUsersController', 'list', 'ipso'],
+        'access_keys' => ['accessKeysController', 'handle', 'ipso'],
         'add_manual' => ['addManualController', 'handle', 'none'],
         'getperson' => ['getPersonController', 'handle', 'none'],
     ];

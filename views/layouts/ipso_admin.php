@@ -24,6 +24,8 @@
                 <nav class="sidenav shadow-right sidenav-light">
                     <div class="sidenav-menu">
                         <a class="nav-link" href="ipso.php">На главную</a>
+                        <a class="nav-link" href="ipso_users_list.php">Юзеры</a>
+                        <a class="nav-link" href="access_keys.php">Ключи доступа</a>
                     </div>
                 </nav>
             </div>
