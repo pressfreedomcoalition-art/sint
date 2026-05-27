@@ -18,6 +18,11 @@ final class AddManualController
 
     public function handle(): void
     {
+        if (($_SESSION['ipso_user']['role'] ?? '') !== 'admin') {
+            header('location: ipso.php');
+            exit;
+        }
+
         $success = $this->app->manualInsertService()->handleSubmit($_POST);
 
         View::renderLayout('main', 'manual/form', [

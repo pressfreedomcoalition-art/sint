@@ -14,6 +14,7 @@ PHP-приложение OSINT-поиска + панель **IPso** (личны�
 | IPso | сессия `ipso_user` | `login.php`, `ipso.php`, `single_person.php`, `ipso_users*.php` |
 | Админ ключей | сессия `ipso_user` (role=admin) | `access_keys.php` |
 | Админ организаций | сессия `ipso_user` (role=admin) | `criminal_organizations.php` |
+| Экспорт персоны | `?token=` обязателен | `getperson.php` |
 
 **`config.php`** (вне git): `$pdo`, `$esia_tables`, `BASE_URL`.
 
@@ -167,3 +168,4 @@ require __DIR__ . '/dispatch.php';
 | 2026-05-27 | Добавлены `db_migr.php` + `DbMigrator`, роль `ipsoshnik`, списки `criminals_pool.php` и `my_clients.php`, отметка `is_criminal` и распределение по ипсошнику |
 | 2026-05-27 | Добавлен справочник преступных организаций, админ-редактор и экспорт организаций в `getperson` JSON |
 | 2026-05-27 | Добавлен поиск и фильтр по организации в списках преступников (`criminals_pool.php`, `my_clients.php`) |
+| 2026-05-27 | Закрыты незащищенные маршруты: `add_manual` теперь только IPso admin, `getperson` теперь только по token |

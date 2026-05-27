@@ -23,8 +23,8 @@ final class Router
         'ipso_users_list' => ['ipsoUsersController', 'list', 'ipso'],
         'access_keys' => ['accessKeysController', 'handle', 'ipso'],
         'criminal_organizations' => ['criminalOrganizationsController', 'handle', 'ipso'],
-        'add_manual' => ['addManualController', 'handle', 'none'],
-        'getperson' => ['getPersonController', 'handle', 'none'],
+        'add_manual' => ['addManualController', 'handle', 'ipso'],
+        'getperson' => ['getPersonController', 'handle', 'token'],
     ];
 
     public static function dispatch(string $route): void
